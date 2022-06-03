@@ -1,12 +1,22 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
+    <nav-bar></nav-bar>
+    <alert-space></alert-space>
     <router-view />
   </div>
 </template>
+
+<script>
+import NavBar from "@/components/NavBar.vue";
+import AlertSpace from "./components/product/AlertSpace.vue";
+
+export default {
+  components: {
+    NavBar,
+    AlertSpace,
+  },
+};
+</script>
 
 <style>
 #app {
@@ -27,6 +37,6 @@ nav a {
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #d3b330;
 }
 </style>

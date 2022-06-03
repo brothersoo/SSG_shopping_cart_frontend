@@ -1,0 +1,95 @@
+<template>
+  <tr>
+    <th scope="row">{{ index + 1 }}</th>
+    <td>{{ product.name }}</td>
+    <td>{{ product.price }}</td>
+    <td>{{ product.stock }}</td>
+    <td>
+      <b-form-spinbutton
+        id="sb"
+        v-model="selectedQuantity"
+        :min="minQuantityToCart"
+        :max="product.stock"
+      />
+    </td>
+    <td>
+      <b-button
+        v-if="isInStock"
+        variant="warning"
+        @click="checkIfIsAlreadyInCart"
+        >장바구니 담기</b-button
+      >
+      <b-button v-else disabled size="lg">재고 없음</b-button>
+    </td>
+  </tr>
+</template>
+
+<script>
+import { mapState, mapActions } from "vuex";
+
+export default {
+  created() {
+    this.$parent.$on("addConfirmed", this.addToCart);
+  },
+  props: {
+    index: Number,
+    product: Object,
+  },
+  data() {
+    return {
+      selectedQuantity: this.product.stock > 0 ? 1 : 0,
+    };
+  },
+  computed: {
+    ...mapState(["cartProducts"]),
+    minQuantityToCart() {
+      return this.product.stock !== 0 ? 1 : 0;
+    },
+    isInStock() {
+      return this.product.stock > 0;
+    },
+  },
+  methods: {
+    ...mapActions(["setCheckingProduct", "addToCart"]),
+    getSameProductInCart() {
+      let group = this.product.productGroupName;
+      if (group in this.cartProducts) {
+        for (let cartProduct of this.cartProducts[group]) {
+          if (cartProduct.product.id === this.product.id) {
+            return cartProduct;
+          }
+        }
+      }
+      return null;
+    },
+    isTotalQuantityOverStock(sameProductInCart) {
+      console.log(
+        this.selectedQuantity,
+        sameProductInCart.quantity,
+        this.product.stock
+      );
+      return (
+        this.selectedQuantity + sameProductInCart.quantity > this.product.stock
+      );
+    },
+    checkIfIsAlreadyInCart() {
+      this.setCheckingProduct({
+        id: this.product.id,
+        quantity: this.selectedQuantity,
+      });
+      let sameProductInCart = this.getSameProductInCart();
+      console.log(sameProductInCart);
+      if (sameProductInCart) {
+        if (this.isTotalQuantityOverStock(sameProductInCart)) {
+          this.$store.commit("SHOW_QUANTITY_EXCEEDED_ALERT", 3);
+          this.$store.commit("SET_STOCK_LEFT", this.product.stock);
+        } else {
+          this.$bvModal.show("existing-product-alert-modal");
+        }
+      } else {
+        this.addToCart();
+      }
+    },
+  },
+};
+</script>
