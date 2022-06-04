@@ -8,35 +8,16 @@
       추가하시겠습니까?</b-modal
     >
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">상품명</th>
-          <th scope="col">가격</th>
-          <th scope="col">재고수</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <product-row
-          v-for="(product, index) in products"
-          :key="product.id"
-          :index="index"
-          :product="product"
-        />
-      </tbody>
-    </table>
+    <product-table :products="products"></product-table>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import ProductRow from "./ProductRow.vue";
+import ProductTable from "./ProductTable.vue";
 
 export default {
-  components: { ProductRow },
+  components: { ProductTable },
   computed: {
     ...mapState(["products", "checkingProduct"]),
   },
