@@ -8,16 +8,23 @@
       추가하시겠습니까?</b-modal
     >
 
-    <product-table :products="products"></product-table>
+    <product-table :products="products.content"></product-table>
+
+    <pagination-bar
+      :totalPages="products.totalPages"
+      :currentPage="products.currentPage"
+      :pageSize="products.pageSize"
+    ></pagination-bar>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import ProductTable from "./ProductTable.vue";
+import PaginationBar from "@/components/PaginationBar.vue";
+import ProductTable from "@/components/product/ProductTable.vue";
 
 export default {
-  components: { ProductTable },
+  components: { ProductTable, PaginationBar },
   computed: {
     ...mapState(["products", "checkingProduct"]),
   },
@@ -36,7 +43,7 @@ export default {
     },
   },
   created() {
-    this.getProducts({});
+    this.getProducts({ page: 1, size: 10 });
     this.getCartProducts();
   },
 };
