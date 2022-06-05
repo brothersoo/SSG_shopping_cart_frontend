@@ -3,12 +3,12 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col"></th>
-          <th scope="col">상품명</th>
-          <th scope="col">가격</th>
-          <th scope="col">재고수</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
+          <th id="product-index" scope="col"></th>
+          <th id="product-name" scope="col">상품명</th>
+          <th id="product-price" scope="col">가격</th>
+          <th id="product-stock" scope="col">재고수</th>
+          <th id="quantity-selection" scope="col"></th>
+          <th id="add-to-cart-button" scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -44,3 +44,23 @@ export default {
   },
 };
 </script>
+
+<style>
+#product-index {
+  width: 10em;
+}
+#product-name {
+  width: 40em;
+}
+#product-price {
+  width: 10em;
+}
+#product-stock {
+}
+#quantity-selection {
+  width: 10em;
+}
+#add-to-cart-button {
+  width: 20em;
+}
+</style>
