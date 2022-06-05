@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="product">
     <b-modal
       id="existing-product-alert-modal"
       @ok="addConfirmed"

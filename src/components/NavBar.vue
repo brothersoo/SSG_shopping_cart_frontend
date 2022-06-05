@@ -7,7 +7,7 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item><router-link to="/">상품</router-link></b-nav-item>
+          <b-nav-item><router-link to="/product">상품</router-link></b-nav-item>
           <b-nav-item
             ><router-link to="/cart">장바구니</router-link></b-nav-item
           >
