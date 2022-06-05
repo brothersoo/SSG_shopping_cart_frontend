@@ -8,7 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    products: [],
+    products: {},
     cartProducts: {},
     checkingProduct: {
       id: null,
@@ -25,8 +25,18 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    SET_PRODUCTS(state, payload) {
-      state.products = payload;
+    SET_PRODUCTS(
+      state,
+      { content, totalPages, totalElements, numberOfElements, size, number }
+    ) {
+      state.products = {
+        content,
+        totalPages,
+        totalElements,
+        numberOfElements,
+        pageSize: size,
+        currentPage: number + 1,
+      };
     },
     SET_CART_PRODUCTS(state, payload) {
       state.cartProducts = payload;
@@ -64,7 +74,7 @@ export default new Vuex.Store({
       productAPI
         .getProducts(filter)
         .then((response) => {
-          context.commit("SET_PRODUCTS", response.data.content);
+          context.commit("SET_PRODUCTS", response.data);
         })
         .catch((err) => {
           console.error(err);
