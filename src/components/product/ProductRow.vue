@@ -2,11 +2,11 @@
   <tr>
     <th scope="row">{{ index + 1 }}</th>
     <td>{{ product.name }}</td>
-    <td>{{ product.price }}</td>
+    <td>{{ product.price | moneyFormat }}</td>
     <td>{{ product.stock }}</td>
     <td>
       <b-form-spinbutton
-        id="sb"
+        id="sb-product-quantity"
         v-model="selectedQuantity"
         :min="minQuantityToCart"
         :max="product.stock"
@@ -63,11 +63,6 @@ export default {
       return null;
     },
     isTotalQuantityOverStock(sameProductInCart) {
-      console.log(
-        this.selectedQuantity,
-        sameProductInCart.quantity,
-        this.product.stock
-      );
       return (
         this.selectedQuantity + sameProductInCart.quantity > this.product.stock
       );
@@ -78,7 +73,6 @@ export default {
         quantity: this.selectedQuantity,
       });
       let sameProductInCart = this.getSameProductInCart();
-      console.log(sameProductInCart);
       if (sameProductInCart) {
         if (this.isTotalQuantityOverStock(sameProductInCart)) {
           this.$store.commit("SHOW_QUANTITY_EXCEEDED_ALERT", 3);
@@ -89,6 +83,11 @@ export default {
       } else {
         this.addToCart();
       }
+    },
+  },
+  filters: {
+    moneyFormat(val) {
+      return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
     },
   },
 };
