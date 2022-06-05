@@ -14,6 +14,11 @@ export default new Vuex.Store({
       id: null,
       quantity: null,
     },
+    checkedCartProducts: {
+      쓱배송: [],
+      새벽배송: [],
+      택배: [],
+    },
 
     cartAddSuccessDismissCountDown: 0,
     quantityExceededStockDismissCountDown: 0,
@@ -22,6 +27,51 @@ export default new Vuex.Store({
   getters: {
     userEmail() {
       return "moistybro@gmail.com";
+    },
+    productGroups() {
+      return ["쓱배송", "새벽배송", "택배"];
+    },
+    checkedCartProductsPrice(state, getters) {
+      let checkedCartProductsPrice = 0;
+      for (let productGroup of getters.productGroups) {
+        for (let cartProduct of state.checkedCartProducts[productGroup]) {
+          checkedCartProductsPrice +=
+            cartProduct.product.price * cartProduct.quantity;
+        }
+      }
+      return checkedCartProductsPrice;
+    },
+    everyCartProductsPrice(state, getters) {
+      let everyCartProductsPrice = 0;
+      for (let productGroup of getters.productGroups) {
+        if (productGroup in state.cartProducts) {
+          for (let cartProduct of state.cartProducts[productGroup]) {
+            everyCartProductsPrice +=
+              cartProduct.product.price * cartProduct.quantity;
+          }
+        }
+      }
+      return everyCartProductsPrice;
+    },
+    checkedCartProductIds(state, getters) {
+      let checkedCartProductIds = [];
+      for (let productGroup of getters.productGroups) {
+        for (let cartProduct of state.checkedCartProducts[productGroup]) {
+          checkedCartProductIds.push(cartProduct.id);
+        }
+      }
+      return checkedCartProductIds;
+    },
+    everyCartProductIds(state, getters) {
+      let everyCartProductIds = [];
+      for (let productGroup of getters.productGroups) {
+        if (productGroup in state.cartProducts) {
+          for (let cartProduct of state.cartProducts[productGroup]) {
+            everyCartProductIds.push(cartProduct.id);
+          }
+        }
+      }
+      return everyCartProductIds;
     },
   },
   mutations: {
@@ -110,6 +160,16 @@ export default new Vuex.Store({
           } else {
             console.log(response);
           }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    updateCartProduct({ commit }, { cartProductId, quantity }) {
+      cartAPI
+        .updateCartProduct(cartProductId, quantity)
+        .then((response) => {
+          commit("UPDATE_CART_PRODUCT", response.data);
         })
         .catch((err) => {
           console.error(err);

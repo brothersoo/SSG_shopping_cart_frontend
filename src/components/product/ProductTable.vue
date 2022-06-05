@@ -55,8 +55,6 @@ export default {
 #product-price {
   width: 10em;
 }
-#product-stock {
-}
 #quantity-selection {
   width: 10em;
 }
