@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import NavBar from "@/components/NavBar.vue";
+import NavBar from "@/components/common/NavBar.vue";
 import AlertSpace from "./components/product/AlertSpace.vue";
 
 export default {
