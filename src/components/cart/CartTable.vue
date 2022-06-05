@@ -10,13 +10,15 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">선택</th>
-            <th scope="col">상품명</th>
-            <th scope="col">판매가</th>
-            <th scope="col">구매수량</th>
-            <th scope="col">구매금액</th>
-            <th scope="col">장바구니에서 제거</th>
+            <th id="cart-product-index" scope="col">#</th>
+            <th id="cart-product-selection" scope="col">선택</th>
+            <th id="cart-product-name" scope="col">상품명</th>
+            <th id="cart-product-price" scope="col">판매가</th>
+            <th id="cart-product-quantity" scope="col">구매수량</th>
+            <th id="cart-product-total-price" scope="col">구매금액</th>
+            <th id="cart-product-remove-button" scope="col">
+              장바구니에서 제거
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -49,3 +51,27 @@ export default {
   },
 };
 </script>
+
+<style>
+#cart-product-index {
+  width: 5%;
+}
+#cart-product-selection {
+  width: 10%;
+}
+#cart-product-name {
+  width: 35%;
+}
+#cart-product-price {
+  width: 15%;
+}
+#cart-product-quantity {
+  width: 10%;
+}
+#cart-product-total-price {
+  width: 10%;
+}
+#cart-product-remove-button {
+  width: 10%;
+}
+</style>

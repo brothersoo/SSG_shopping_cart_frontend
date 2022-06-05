@@ -13,13 +13,14 @@
       />
     </td>
     <td>
-      <b-button
+      <b-icon
         v-if="isInStock"
+        icon="cart4"
+        scale="2"
         variant="warning"
         @click="checkIfIsAlreadyInCart"
-        >장바구니 담기</b-button
-      >
-      <b-button v-else disabled size="lg">재고 없음</b-button>
+      ></b-icon>
+      <b-icon v-else icon="cart-x" scale="2" variant="secondary"></b-icon>
     </td>
   </tr>
 </template>
