@@ -209,7 +209,6 @@ export default new Vuex.Store({
     },
 
     setProductFilter({ commit }, { priceSliders, orderSelection }) {
-      console.log(priceSliders, orderSelection);
       commit("SET_PRODUCT_PRICE_SLIDER", priceSliders);
       commit("SET_PRODUCT_ORDER_SELECTION", orderSelection);
     },

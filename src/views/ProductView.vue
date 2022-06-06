@@ -51,7 +51,6 @@ export default {
     },
   },
   created() {
-    console.log(this.filterParam);
     this.getProducts(this.filterParam);
     this.getCartProducts();
     this.setProductFilter({
