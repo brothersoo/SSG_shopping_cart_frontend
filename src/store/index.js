@@ -16,7 +16,11 @@ export default new Vuex.Store({
       totalElements: 0,
       totalPages: 0,
     },
-    cartProducts: {},
+    cartProducts: {
+      쓱배송: [],
+      새벽배송: [],
+      택배: [],
+    },
     checkingProduct: {
       id: null,
       quantity: null,
@@ -33,12 +37,46 @@ export default new Vuex.Store({
 
     productFilter: {
       priceSlider: {
-        rangeSlider: [null, null],
+        value: [null, null],
+        range: {
+          min: null,
+          max: null,
+        },
+        options: {
+          step: 1000,
+          tooltips: [true, true],
+          format: {
+            from(value) {
+              return parseInt(value);
+            },
+            to(value) {
+              return parseInt(value);
+            },
+          },
+        },
       },
       orderSelection: {
         selected: "createdAt",
+        options: [
+          {
+            value: "createdAt",
+            text: "신상품순",
+          },
+          {
+            value: "price",
+            text: "낮은가격순",
+          },
+          {
+            value: "price,DESC",
+            text: "높은가격순",
+          },
+        ],
       },
-      productGroupSelection: ["쓱배송", "새벽배송", "택배"],
+      productGroupSelection: [
+        { id: 1, name: "쓱배송" },
+        { id: 2, name: "새벽배송" },
+        { id: 3, name: "택배" },
+      ],
     },
   },
   getters: {
@@ -46,11 +84,18 @@ export default new Vuex.Store({
       return "moistybro@gmail.com";
     },
     productGroups() {
-      return ["쓱배송", "새벽배송", "택배"];
+      return [
+        { id: 1, name: "쓱배송" },
+        { id: 2, name: "새벽배송" },
+        { id: 3, name: "택배" },
+      ];
+    },
+    productGroupNames(state, getters) {
+      return getters.productGroups.map((group) => group.name);
     },
     checkedCartProductsPrice(state, getters) {
       let checkedCartProductsPrice = 0;
-      for (let productGroup of getters.productGroups) {
+      for (let productGroup of getters.productGroupNames) {
         for (let cartProduct of state.checkedCartProducts[productGroup]) {
           checkedCartProductsPrice +=
             cartProduct.product.price * cartProduct.quantity;
@@ -60,19 +105,17 @@ export default new Vuex.Store({
     },
     everyCartProductsPrice(state, getters) {
       let everyCartProductsPrice = 0;
-      for (let productGroup of getters.productGroups) {
-        if (productGroup in state.cartProducts) {
-          for (let cartProduct of state.cartProducts[productGroup]) {
-            everyCartProductsPrice +=
-              cartProduct.product.price * cartProduct.quantity;
-          }
+      for (let productGroup of getters.productGroupNames) {
+        for (let cartProduct of state.cartProducts[productGroup]) {
+          everyCartProductsPrice +=
+            cartProduct.product.price * cartProduct.quantity;
         }
       }
       return everyCartProductsPrice;
     },
     checkedCartProductIds(state, getters) {
       let checkedCartProductIds = [];
-      for (let productGroup of getters.productGroups) {
+      for (let productGroup of getters.productGroupNames) {
         for (let cartProduct of state.checkedCartProducts[productGroup]) {
           checkedCartProductIds.push(cartProduct.id);
         }
@@ -81,11 +124,9 @@ export default new Vuex.Store({
     },
     everyCartProductIds(state, getters) {
       let everyCartProductIds = [];
-      for (let productGroup of getters.productGroups) {
-        if (productGroup in state.cartProducts) {
-          for (let cartProduct of state.cartProducts[productGroup]) {
-            everyCartProductIds.push(cartProduct.id);
-          }
+      for (let productGroup of getters.productGroupNames) {
+        for (let cartProduct of state.cartProducts[productGroup]) {
+          everyCartProductIds.push(cartProduct.id);
         }
       }
       return everyCartProductIds;
@@ -94,10 +135,12 @@ export default new Vuex.Store({
       return {
         page: state.products.currentPage,
         size: state.products.pageSize,
-        fromPrice: state.productFilter.priceSlider.rangeSlider[0],
-        toPrice: state.productFilter.priceSlider.rangeSlider[1],
+        fromPrice: state.productFilter.priceSlider.value[0],
+        toPrice: state.productFilter.priceSlider.value[1],
         sort: state.productFilter.orderSelection.selected,
-        groupNames: state.productFilter.productGroupSelection,
+        groupIds: state.productFilter.productGroupSelection
+          .map((group) => group.id)
+          .join(","),
       };
     },
   },
@@ -122,13 +165,12 @@ export default new Vuex.Store({
       state.checkingProduct = payload;
     },
     UPDATE_CART_PRODUCT(state, addedCartProduct) {
-      let group = addedCartProduct.product.productGroupName;
+      let group = addedCartProduct.product.productGroup.name;
       if (!(group in state.cartProducts)) {
         state.cartProducts[group] = [];
       }
 
       for (let cartProduct of state.cartProducts[group]) {
-        console.log(cartProduct, addedCartProduct.product.id);
         if (cartProduct.product.id === addedCartProduct.product.id) {
           cartProduct.quantity = addedCartProduct.quantity;
           return;
@@ -146,14 +188,12 @@ export default new Vuex.Store({
       state.stockLeft = stock;
     },
 
-    SET_PRODUCT_PRICE_SLIDER(state, slider) {
-      state.productFilter.priceSlider = slider;
-    },
-    SET_PRODUCT_ORDER_SELECTION(state, selection) {
-      state.productFilter.orderSelection = selection;
-    },
     SET_PRODUCT_GROUP_SELECTION(state, productGroupSelection) {
       state.productFilter.productGroupSelection = productGroupSelection;
+    },
+    SET_PRICE_RANGE_FILTER(state, { value, range }) {
+      state.productFilter.priceSlider.value = value;
+      state.productFilter.priceSlider.range = range;
     },
   },
   actions: {
@@ -214,19 +254,11 @@ export default new Vuex.Store({
         });
     },
 
-    setProductFilter(
-      { commit },
-      { priceSliders, orderSelection, productGroupSelection }
-    ) {
-      if (priceSliders) {
-        commit("SET_PRODUCT_PRICE_SLIDER", priceSliders);
-      }
-      if (orderSelection) {
-        commit("SET_PRODUCT_ORDER_SELECTION", orderSelection);
-      }
-      if (productGroupSelection) {
-        commit("SET_PRODUCT_GROUP_SELECTION", productGroupSelection);
-      }
+    setSelectedProductGroup({ commit }, productGroupSelection) {
+      commit("SET_PRODUCT_GROUP_SELECTION", productGroupSelection);
+    },
+    setPriceRangeFilter({ commit }, data) {
+      commit("SET_PRICE_RANGE_FILTER", data);
     },
   },
   modules: {},

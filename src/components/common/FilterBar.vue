@@ -6,14 +6,14 @@
       <td>상품 그룹</td>
     </tr>
     <tr>
-      <td>
+      <td v-if="productFilter.priceSlider.value[0]">
         <base-slider
-          v-model="productFilter.priceSlider.rangeSlider"
+          v-model="productFilter.priceSlider.value"
           type="warning"
           :connect="true"
           :range="productFilter.priceSlider.range"
           :options="productFilter.priceSlider.options"
-          @input="onFilterChange"
+          @change="onFilterChange"
           style="width: 250px"
         ></base-slider>
       </td>

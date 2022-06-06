@@ -57,6 +57,12 @@ export default {
           this.$emit("input", value);
         }
       });
+      slider.on("change", () => {
+        let value = slider.get();
+        if (value !== this.value) {
+          this.$emit("change", value);
+        }
+      });
     },
   },
   mounted() {

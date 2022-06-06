@@ -25,6 +25,7 @@ import { mapState, mapGetters, mapActions } from "vuex";
 import ProductTable from "@/components/product/ProductTable.vue";
 import PaginationBar from "@/components/common/PaginationBar.vue";
 import FilterBar from "@/components/common/FilterBar.vue";
+import * as productAPI from "@/api/product";
 
 export default {
   components: { ProductTable, PaginationBar, FilterBar },
@@ -38,7 +39,7 @@ export default {
       "getCartProducts",
       "addToCart",
       "setCheckingProduct",
-      "setProductFilter",
+      "setPriceRangeFilter",
     ]),
     addConfirmed() {
       this.addToCart();
@@ -51,47 +52,19 @@ export default {
     },
   },
   created() {
+    productAPI
+      .getPriceRange({ groupIds: this.filterParam.groupIds })
+      .then(({ data }) => {
+        this.setPriceRangeFilter({
+          value: [data.minPrice, data.maxPrice],
+          range: {
+            min: data.minPrice,
+            max: data.maxPrice,
+          },
+        });
+      });
     this.getProducts();
     this.getCartProducts();
-    this.setProductFilter({
-      priceSliders: {
-        simple: 30,
-        rangeSlider: [0, 1000000],
-        range: {
-          min: 0,
-          max: 1000000,
-        },
-        options: {
-          step: 1000,
-          tooltips: [true, true],
-          format: {
-            from(value) {
-              return parseInt(value);
-            },
-            to(value) {
-              return parseInt(value);
-            },
-          },
-        },
-      },
-      orderSelection: {
-        selected: "createdAt",
-        options: [
-          {
-            value: "createdAt",
-            text: "신상품순",
-          },
-          {
-            value: "price",
-            text: "낮은가격순",
-          },
-          {
-            value: "price,DESC",
-            text: "높은가격순",
-          },
-        ],
-      },
-    });
   },
 };
 </script>

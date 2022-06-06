@@ -1,14 +1,14 @@
 <template>
   <div class="cart">
-    <div v-for="(productGroup, index) in productGroups" :key="index">
-      <cart-table
-        v-if="
-          productGroup in cartProducts && cartProducts[productGroup].length > 0
-        "
-        :cartProducts="cartProducts[productGroup]"
-        :type="productGroup"
-      ></cart-table>
-      <br />
+    <div>
+      <div v-for="(productGroupName, index) in productGroupNames" :key="index">
+        <cart-table
+          v-if="cartProducts[productGroupName].length > 0"
+          :cartProducts="cartProducts[productGroupName]"
+          :type="productGroupName"
+        ></cart-table>
+        <br />
+      </div>
     </div>
 
     <template v-if="everyCartProductIds.length > 0">
@@ -40,7 +40,7 @@ export default {
   computed: {
     ...mapState(["cartProducts"]),
     ...mapGetters([
-      "productGroups",
+      "productGroupNames",
       "checkedCartProductsPrice",
       "everyCartProductsPrice",
       "checkedCartProductIds",

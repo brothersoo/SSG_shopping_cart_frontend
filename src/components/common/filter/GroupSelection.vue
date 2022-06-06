@@ -26,20 +26,18 @@ export default {
   },
   created() {
     for (let group of this.groups) {
-      this.buttons.push({ caption: group, state: true });
+      this.buttons.push({ data: group, caption: group.name, state: true });
     }
   },
   computed: {
-    selectedProductGroupNames() {
-      return this.buttons.filter((btn) => btn.state).map((btn) => btn.caption);
+    selectedProductGroups() {
+      return this.buttons.filter((btn) => btn.state).map((btn) => btn.data);
     },
   },
   methods: {
-    ...mapActions(["setProductFilter", "getProducts"]),
+    ...mapActions(["setSelectedProductGroup", "getProducts"]),
     productGroupToggle() {
-      this.setProductFilter({
-        productGroupSelection: this.selectedProductGroupNames,
-      });
+      this.setSelectedProductGroup(this.selectedProductGroups);
       this.getProducts();
     },
   },

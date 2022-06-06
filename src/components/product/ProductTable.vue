@@ -31,17 +31,6 @@ export default {
     products: Array,
   },
   components: { ProductRow },
-  data() {
-    return {
-      perPage: 3,
-      currentPage: 1,
-    };
-  },
-  computed: {
-    rows() {
-      return this.products.length;
-    },
-  },
 };
 </script>
 

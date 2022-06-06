@@ -22,7 +22,7 @@
           </tr>
         </thead>
         <tbody>
-          <product-row
+          <cart-product-row
             v-for="(cartProduct, index) in cartProducts"
             :key="cartProduct.id"
             :index="index"
@@ -36,7 +36,7 @@
 
 <script>
 import { mapState } from "vuex";
-import ProductRow from "@/components/cart/CartProductRow.vue";
+import CartProductRow from "@/components/cart/CartProductRow.vue";
 
 export default {
   props: {
@@ -44,7 +44,7 @@ export default {
     type: String,
   },
   components: {
-    ProductRow,
+    CartProductRow,
   },
   computed: {
     ...mapState(["checkedCartProducts"]),
