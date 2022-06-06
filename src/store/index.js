@@ -152,11 +152,12 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    getProducts(context, filter) {
+    getProducts({ commit, state, getters }, page) {
+      state.products.currentPage = page;
       productAPI
-        .getProducts(filter)
+        .getProducts(getters.filterParam)
         .then((response) => {
-          context.commit("SET_PRODUCTS", response.data);
+          commit("SET_PRODUCTS", response.data);
         })
         .catch((err) => {
           console.error(err);

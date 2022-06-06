@@ -47,19 +47,19 @@ export default {
       this.setCheckingProduct({ id: null, quantity: null });
     },
     onFilterChange() {
-      this.getProducts(this.filterParam);
+      this.getProducts();
     },
   },
   created() {
-    this.getProducts(this.filterParam);
+    this.getProducts();
     this.getCartProducts();
     this.setProductFilter({
       priceSliders: {
         simple: 30,
-        rangeSlider: [0, 180000],
+        rangeSlider: [0, 1000000],
         range: {
           min: 0,
-          max: 180000,
+          max: 1000000,
         },
         options: {
           step: 1000,
