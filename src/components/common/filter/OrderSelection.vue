@@ -30,7 +30,7 @@ export default {
 
 <style scoped>
 #order-selection {
-  width: 300px;
+  width: 100px;
   display: inline-block;
 }
 </style>

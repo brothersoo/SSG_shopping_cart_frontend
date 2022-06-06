@@ -1,9 +1,9 @@
 <template>
   <table id="filter-bar">
     <tr>
-      <td style="width: 200px">가격</td>
-      <td style="width: 70px"></td>
+      <td>가격</td>
       <td>정렬</td>
+      <td>상품 그룹</td>
     </tr>
     <tr>
       <td>
@@ -14,20 +14,24 @@
           :range="productFilter.priceSlider.range"
           :options="productFilter.priceSlider.options"
           @input="onFilterChange"
+          style="width: 250px"
         ></base-slider>
       </td>
-      <td></td>
       <td>
         <order-selection :onFilterChange="onFilterChange"></order-selection>
+      </td>
+      <td style="width: 500px">
+        <group-selection :groups="productGroups"></group-selection>
       </td>
     </tr>
   </table>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import BaseSlider from "./BaseSlider.vue";
-import OrderSelection from "@/components/common/OrderSelection.vue";
+import { mapState, mapGetters } from "vuex";
+import BaseSlider from "@/components/common/filter/BaseSlider.vue";
+import OrderSelection from "@/components/common/filter/OrderSelection.vue";
+import GroupSelection from "@/components/common/filter/GroupSelection.vue";
 
 export default {
   props: {
@@ -35,8 +39,9 @@ export default {
   },
   computed: {
     ...mapState(["productFilter"]),
+    ...mapGetters(["productGroups"]),
   },
-  components: { BaseSlider, OrderSelection },
+  components: { BaseSlider, OrderSelection, GroupSelection },
 };
 </script>
 
@@ -45,5 +50,9 @@ export default {
   margin: auto;
   width: 50%;
   padding: 10px;
+}
+#filter-bar > tr > td {
+  padding-left: 35px;
+  padding-right: 35px;
 }
 </style>

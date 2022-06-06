@@ -38,6 +38,7 @@ export default new Vuex.Store({
       orderSelection: {
         selected: "createdAt",
       },
+      productGroupSelection: ["쓱배송", "새벽배송", "택배"],
     },
   },
   getters: {
@@ -96,6 +97,7 @@ export default new Vuex.Store({
         fromPrice: state.productFilter.priceSlider.rangeSlider[0],
         toPrice: state.productFilter.priceSlider.rangeSlider[1],
         sort: state.productFilter.orderSelection.selected,
+        groupNames: state.productFilter.productGroupSelection,
       };
     },
   },
@@ -149,6 +151,9 @@ export default new Vuex.Store({
     },
     SET_PRODUCT_ORDER_SELECTION(state, selection) {
       state.productFilter.orderSelection = selection;
+    },
+    SET_PRODUCT_GROUP_SELECTION(state, productGroupSelection) {
+      state.productFilter.productGroupSelection = productGroupSelection;
     },
   },
   actions: {
@@ -209,9 +214,19 @@ export default new Vuex.Store({
         });
     },
 
-    setProductFilter({ commit }, { priceSliders, orderSelection }) {
-      commit("SET_PRODUCT_PRICE_SLIDER", priceSliders);
-      commit("SET_PRODUCT_ORDER_SELECTION", orderSelection);
+    setProductFilter(
+      { commit },
+      { priceSliders, orderSelection, productGroupSelection }
+    ) {
+      if (priceSliders) {
+        commit("SET_PRODUCT_PRICE_SLIDER", priceSliders);
+      }
+      if (orderSelection) {
+        commit("SET_PRODUCT_ORDER_SELECTION", orderSelection);
+      }
+      if (productGroupSelection) {
+        commit("SET_PRODUCT_GROUP_SELECTION", productGroupSelection);
+      }
     },
   },
   modules: {},
