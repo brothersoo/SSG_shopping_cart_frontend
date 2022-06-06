@@ -8,15 +8,7 @@
       추가하시겠습니까?</b-modal
     >
 
-    <div style="width: 500px">
-      <base-slider
-        v-model="sliders.rangeSlider"
-        type="warning"
-        :connect="true"
-        :range="sliders.range"
-        :options="sliders.options"
-      ></base-slider>
-    </div>
+    <filter-bar :onFilterChange="onFilterChange"></filter-bar>
 
     <product-table :products="products.content"></product-table>
 
@@ -29,20 +21,41 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 import ProductTable from "@/components/product/ProductTable.vue";
 import PaginationBar from "@/components/common/PaginationBar.vue";
-
-import BaseSlider from "@/components/common/BaseSlider.vue";
+import FilterBar from "@/components/common/FilterBar.vue";
 
 export default {
-  components: { ProductTable, PaginationBar, BaseSlider },
+  components: { ProductTable, PaginationBar, FilterBar },
   computed: {
     ...mapState(["products", "checkingProduct"]),
+    ...mapGetters(["filterParam"]),
   },
-  data() {
-    return {
-      sliders: {
+  methods: {
+    ...mapActions([
+      "getProducts",
+      "getCartProducts",
+      "addToCart",
+      "setCheckingProduct",
+      "setProductFilter",
+    ]),
+    addConfirmed() {
+      this.addToCart();
+    },
+    removeCheckingProduct() {
+      this.setCheckingProduct({ id: null, quantity: null });
+    },
+    onFilterChange() {
+      this.getProducts(this.filterParam);
+    },
+  },
+  created() {
+    console.log(this.filterParam);
+    this.getProducts(this.filterParam);
+    this.getCartProducts();
+    this.setProductFilter({
+      priceSliders: {
         simple: 30,
         rangeSlider: [0, 180000],
         range: {
@@ -52,27 +65,34 @@ export default {
         options: {
           step: 1000,
           tooltips: [true, true],
+          format: {
+            from(value) {
+              return parseInt(value);
+            },
+            to(value) {
+              return parseInt(value);
+            },
+          },
         },
       },
-    };
-  },
-  methods: {
-    ...mapActions([
-      "getProducts",
-      "getCartProducts",
-      "addToCart",
-      "setCheckingProduct",
-    ]),
-    addConfirmed() {
-      this.addToCart();
-    },
-    removeCheckingProduct() {
-      this.setCheckingProduct({ id: null, quantity: null });
-    },
-  },
-  created() {
-    this.getProducts({ page: 1, size: 10 });
-    this.getCartProducts();
+      orderSelection: {
+        selected: "createdAt",
+        options: [
+          {
+            value: "createdAt",
+            text: "신상품순",
+          },
+          {
+            value: "price",
+            text: "낮은가격순",
+          },
+          {
+            value: "price,DESC",
+            text: "높은가격순",
+          },
+        ],
+      },
+    });
   },
 };
 </script>

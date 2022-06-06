@@ -8,7 +8,14 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    products: {},
+    products: {
+      content: [],
+      currentPage: 1,
+      numberOfElements: 0,
+      pageSize: 10,
+      totalElements: 0,
+      totalPages: 0,
+    },
     cartProducts: {},
     checkingProduct: {
       id: null,
@@ -23,6 +30,15 @@ export default new Vuex.Store({
     cartAddSuccessDismissCountDown: 0,
     quantityExceededStockDismissCountDown: 0,
     stockLeft: 0,
+
+    productFilter: {
+      priceSlider: {
+        rangeSlider: [null, null],
+      },
+      orderSelection: {
+        selected: "createdAt",
+      },
+    },
   },
   getters: {
     userEmail() {
@@ -73,6 +89,15 @@ export default new Vuex.Store({
       }
       return everyCartProductIds;
     },
+    filterParam(state) {
+      return {
+        page: state.products.currentPage,
+        size: state.products.pageSize,
+        fromPrice: state.productFilter.priceSlider.rangeSlider[0],
+        toPrice: state.productFilter.priceSlider.rangeSlider[1],
+        sort: state.productFilter.orderSelection.selected,
+      };
+    },
   },
   mutations: {
     SET_PRODUCTS(
@@ -117,6 +142,13 @@ export default new Vuex.Store({
     },
     SET_STOCK_LEFT(state, stock) {
       state.stockLeft = stock;
+    },
+
+    SET_PRODUCT_PRICE_SLIDER(state, slider) {
+      state.productFilter.priceSlider = slider;
+    },
+    SET_PRODUCT_ORDER_SELECTION(state, selection) {
+      state.productFilter.orderSelection = selection;
     },
   },
   actions: {
@@ -174,6 +206,12 @@ export default new Vuex.Store({
         .catch((err) => {
           console.error(err);
         });
+    },
+
+    setProductFilter({ commit }, { priceSliders, orderSelection }) {
+      console.log(priceSliders, orderSelection);
+      commit("SET_PRODUCT_PRICE_SLIDER", priceSliders);
+      commit("SET_PRODUCT_ORDER_SELECTION", orderSelection);
     },
   },
   modules: {},
