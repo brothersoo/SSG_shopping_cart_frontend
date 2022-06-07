@@ -30,8 +30,10 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { createNamespacedHelpers } from "vuex";
 import * as cartAPI from "@/api/cart";
+
+const cartHelper = createNamespacedHelpers("cart");
 
 export default {
   props: {
@@ -44,7 +46,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(["checkedCartProducts"]),
+    ...cartHelper.mapState({
+      checkedCartProducts: (state) => state.checkedCartProducts,
+    }),
     minQuantityToCart() {
       return this.cartProduct.product.stock !== 0 ? 1 : 0;
     },
@@ -53,7 +57,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["updateCartProduct", "getCartProducts"]),
+    ...cartHelper.mapActions(["updateCartProduct", "getCartProducts"]),
     quantityUpdated(quantity) {
       this.updateCartProduct({ cartProductId: this.cartProduct.id, quantity });
     },

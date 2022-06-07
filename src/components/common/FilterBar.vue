@@ -29,18 +29,25 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { createNamespacedHelpers } from "vuex";
 import BaseSlider from "@/components/common/filter/BaseSlider.vue";
 import OrderSelection from "@/components/common/filter/OrderSelection.vue";
 import GroupSelection from "@/components/common/filter/GroupSelection.vue";
+
+const filterHelper = createNamespacedHelpers("filter");
+const productGroupHelper = createNamespacedHelpers("productGroup");
 
 export default {
   props: {
     onFilterChange: Function,
   },
   computed: {
-    ...mapState(["productFilter"]),
-    ...mapGetters(["productGroups"]),
+    ...filterHelper.mapState({
+      productFilter: (state) => state.productFilter,
+    }),
+    ...productGroupHelper.mapState({
+      productGroups: (state) => state.productGroups,
+    }),
   },
   components: { BaseSlider, OrderSelection, GroupSelection },
 };

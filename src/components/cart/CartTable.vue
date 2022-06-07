@@ -35,8 +35,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { createNamespacedHelpers } from "vuex";
 import CartProductRow from "@/components/cart/CartProductRow.vue";
+
+const cartHelper = createNamespacedHelpers("cart");
 
 export default {
   props: {
@@ -47,7 +49,9 @@ export default {
     CartProductRow,
   },
   computed: {
-    ...mapState(["checkedCartProducts"]),
+    ...cartHelper.mapState({
+      checkedCartProducts: (state) => state.checkedCartProducts,
+    }),
   },
 };
 </script>

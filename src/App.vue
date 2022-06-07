@@ -8,7 +8,7 @@
 
 <script>
 import NavBar from "@/components/common/NavBar.vue";
-import AlertSpace from "./components/product/AlertSpace.vue";
+import AlertSpace from "./components/common/AlertSpace.vue";
 
 export default {
   components: {

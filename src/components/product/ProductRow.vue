@@ -26,7 +26,11 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { createNamespacedHelpers } from "vuex";
+
+const productHelper = createNamespacedHelpers("product");
+const cartHelper = createNamespacedHelpers("cart");
+const alertHelper = createNamespacedHelpers("alert");
 
 export default {
   created() {
@@ -42,7 +46,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(["cartProducts"]),
+    ...cartHelper.mapState({
+      cartProducts: (state) => state.cartProducts,
+    }),
     minQuantityToCart() {
       return this.product.stock !== 0 ? 1 : 0;
     },
@@ -51,7 +57,13 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["setCheckingProduct", "addToCart"]),
+    ...productHelper.mapActions(["setCheckingProduct"]),
+    ...cartHelper.mapActions(["addToCart"]),
+    ...alertHelper.mapMutations([
+      "SET_STOCK_LEFT",
+      "SET_ADDABLE_QUANTITY",
+      "SHOW_QUANTITY_EXCEEDED_ALERT",
+    ]),
     getSameProductInCart() {
       let group = this.product.productGroup.name;
       if (group in this.cartProducts) {
@@ -76,12 +88,11 @@ export default {
       let sameProductInCart = this.getSameProductInCart();
       if (sameProductInCart) {
         if (this.isTotalQuantityOverStock(sameProductInCart)) {
-          this.$store.commit("SET_STOCK_LEFT", this.product.stock);
-          this.$store.commit(
-            "SET_ADDABLE_QUANTITY",
+          this.SET_STOCK_LEFT(this.product.stock);
+          this.SET_ADDABLE_QUANTITY(
             this.product.stock - sameProductInCart.quantity
           );
-          this.$store.commit("SHOW_QUANTITY_EXCEEDED_ALERT", 3);
+          this.SHOW_QUANTITY_EXCEEDED_ALERT(3);
         } else {
           this.$bvModal.show("existing-product-alert-modal");
         }

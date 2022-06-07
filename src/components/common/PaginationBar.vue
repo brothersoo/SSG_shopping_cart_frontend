@@ -25,18 +25,18 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { createNamespacedHelpers } from "vuex";
+
+const productHelper = createNamespacedHelpers("product");
+
 export default {
   props: {
     totalPages: Number,
     currentPage: Number,
     pageSize: Number,
   },
-  computed: {
-    ...mapGetters(["filterParam"]),
-  },
   methods: {
-    ...mapActions(["getProducts"]),
+    ...productHelper.mapActions(["getProducts"]),
     getPage(index) {
       if (index !== this.currentPage) {
         this.getProducts(index);

@@ -24,31 +24,38 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { createNamespacedHelpers } from "vuex";
+
+const alertHelper = createNamespacedHelpers("alert");
+
 export default {
-  data() {
-    return {};
-  },
   computed: {
-    ...mapState(["stockLeft", "addableQuantity"]),
+    ...alertHelper.mapState({
+      stockLeft: (state) => state.stockLeft,
+      addableQuantity: (state) => state.addableQuantity,
+    }),
     cartAddSuccessDismissCountDown: {
       get() {
-        return this.$store.state.cartAddSuccessDismissCountDown;
+        return this.$store.state.alert.cartAddSuccessDismissCountDown;
       },
       set(value) {
-        this.$store.commit("SHOW_CART_ADD_SUCCESS_ALERT", value);
+        this.SHOW_CART_ADD_SUCCESS_ALERT(value);
       },
     },
     quantityExceededStockDismissCountDown: {
       get() {
-        return this.$store.state.quantityExceededStockDismissCountDown;
+        return this.$store.state.alert.quantityExceededStockDismissCountDown;
       },
       set(value) {
-        this.$store.commit("SHOW_QUANTITY_EXCEEDED_ALERT", value);
+        this.SHOW_QUANTITY_EXCEEDED_ALERT(value);
       },
     },
   },
   methods: {
+    ...alertHelper.mapMutations([
+      "SHOW_CART_ADD_SUCCESS_ALERT",
+      "SHOW_QUANTITY_EXCEEDED_ALERT",
+    ]),
     cartAddSuccessDismissCountDownChanged(dismissCountDown) {
       this.cartAddSuccessDismissCountDown = dismissCountDown;
     },

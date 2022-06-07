@@ -31,24 +31,29 @@
 
 <script>
 import CartTable from "@/components/cart/CartTable.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+import { createNamespacedHelpers } from "vuex";
+
+const cartHelper = createNamespacedHelpers("cart");
+const productGroupHelper = createNamespacedHelpers("productGroup");
 
 export default {
   components: {
     CartTable,
   },
   computed: {
-    ...mapState(["cartProducts"]),
-    ...mapGetters([
-      "productGroupNames",
+    ...cartHelper.mapState({
+      cartProducts: (state) => state.cartProducts,
+    }),
+    ...cartHelper.mapGetters([
       "checkedCartProductsPrice",
       "everyCartProductsPrice",
       "checkedCartProductIds",
       "everyCartProductIds",
     ]),
+    ...productGroupHelper.mapGetters(["productGroupNames"]),
   },
   methods: {
-    ...mapActions(["getCartProducts"]),
+    ...cartHelper.mapActions(["getCartProducts"]),
   },
   created() {
     this.getCartProducts();

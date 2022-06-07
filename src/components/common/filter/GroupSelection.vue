@@ -13,8 +13,11 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { createNamespacedHelpers } from "vuex";
 import * as productAPI from "@/api/product";
+
+const filterHelper = createNamespacedHelpers("filter");
+const productHelper = createNamespacedHelpers("product");
 
 export default {
   props: {
@@ -31,18 +34,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["filterParam"]),
+    ...filterHelper.mapGetters(["filterParam"]),
     selectedProductGroups() {
       return this.buttons.filter((btn) => btn.state).map((btn) => btn.data);
     },
   },
   methods: {
-    ...mapActions([
-      "setSelectedProductGroup",
-      "getProducts",
+    ...filterHelper.mapActions([
       "setPriceRangeFilter",
       "reloadPriceSlider",
+      "setSelectedProductGroup",
     ]),
+    ...productHelper.mapActions(["getProducts"]),
     productGroupToggle() {
       this.setSelectedProductGroup(this.selectedProductGroups);
       productAPI
@@ -56,8 +59,8 @@ export default {
             },
           });
           this.reloadPriceSlider();
+          this.getProducts(1);
         });
-      this.getProducts();
     },
   },
 };

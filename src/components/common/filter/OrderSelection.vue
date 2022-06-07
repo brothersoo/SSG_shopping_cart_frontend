@@ -16,14 +16,18 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { createNamespacedHelpers } from "vuex";
+
+const filterHelper = createNamespacedHelpers("filter");
 
 export default {
   props: {
     onFilterChange: Function,
   },
   computed: {
-    ...mapState(["productFilter"]),
+    ...filterHelper.mapState({
+      productFilter: (state) => state.productFilter,
+    }),
   },
 };
 </script>

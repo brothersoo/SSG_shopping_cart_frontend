@@ -21,26 +21,29 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { createNamespacedHelpers } from "vuex";
 import ProductTable from "@/components/product/ProductTable.vue";
 import PaginationBar from "@/components/common/PaginationBar.vue";
 import FilterBar from "@/components/common/FilterBar.vue";
 import * as productAPI from "@/api/product";
 
+const productHelper = createNamespacedHelpers("product");
+const cartHelper = createNamespacedHelpers("cart");
+const filterHelper = createNamespacedHelpers("filter");
+
 export default {
   components: { ProductTable, PaginationBar, FilterBar },
   computed: {
-    ...mapState(["products", "checkingProduct"]),
-    ...mapGetters(["filterParam"]),
+    ...productHelper.mapState({
+      products: (state) => state.products,
+      checkingProduct: (state) => state.checkingProduct,
+    }),
+    ...filterHelper.mapGetters(["filterParam"]),
   },
   methods: {
-    ...mapActions([
-      "getProducts",
-      "getCartProducts",
-      "addToCart",
-      "setCheckingProduct",
-      "setPriceRangeFilter",
-    ]),
+    ...productHelper.mapActions(["getProducts", "setCheckingProduct"]),
+    ...cartHelper.mapActions(["getCartProducts", "addToCart"]),
+    ...filterHelper.mapActions(["setPriceRangeFilter"]),
     addConfirmed() {
       this.addToCart();
     },
@@ -52,6 +55,7 @@ export default {
     },
   },
   created() {
+    // TODO : call filter param here??
     productAPI
       .getPriceRange({ groupIds: this.filterParam.groupIds })
       .then(({ data }) => {
