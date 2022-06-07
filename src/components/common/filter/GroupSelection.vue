@@ -13,7 +13,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import * as productAPI from "@/api/product";
 
 export default {
   props: {
@@ -30,14 +31,32 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(["filterParam"]),
     selectedProductGroups() {
       return this.buttons.filter((btn) => btn.state).map((btn) => btn.data);
     },
   },
   methods: {
-    ...mapActions(["setSelectedProductGroup", "getProducts"]),
+    ...mapActions([
+      "setSelectedProductGroup",
+      "getProducts",
+      "setPriceRangeFilter",
+      "reloadPriceSlider",
+    ]),
     productGroupToggle() {
       this.setSelectedProductGroup(this.selectedProductGroups);
+      productAPI
+        .getPriceRange({ groupIds: this.filterParam.groupIds })
+        .then(({ data }) => {
+          this.setPriceRangeFilter({
+            value: [data.minPrice, data.maxPrice],
+            range: {
+              min: data.minPrice,
+              max: data.maxPrice,
+            },
+          });
+          this.reloadPriceSlider();
+        });
       this.getProducts();
     },
   },

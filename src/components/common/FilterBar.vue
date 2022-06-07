@@ -9,6 +9,7 @@
       <td v-if="productFilter.priceSlider.value[0]">
         <base-slider
           v-model="productFilter.priceSlider.value"
+          :key="productFilter.priceSlider.key"
           type="warning"
           :connect="true"
           :range="productFilter.priceSlider.range"

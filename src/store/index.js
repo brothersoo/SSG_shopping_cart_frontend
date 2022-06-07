@@ -37,6 +37,7 @@ export default new Vuex.Store({
 
     productFilter: {
       priceSlider: {
+        key: 0,
         value: [null, null],
         range: {
           min: null,
@@ -195,6 +196,9 @@ export default new Vuex.Store({
       state.productFilter.priceSlider.value = value;
       state.productFilter.priceSlider.range = range;
     },
+    RELOAD_PRICE_SLIDER(state) {
+      state.productFilter.priceSlider.key += 1;
+    },
   },
   actions: {
     getProducts({ commit, state, getters }, page) {
@@ -259,6 +263,9 @@ export default new Vuex.Store({
     },
     setPriceRangeFilter({ commit }, data) {
       commit("SET_PRICE_RANGE_FILTER", data);
+    },
+    reloadPriceSlider({ commit }) {
+      commit("RELOAD_PRICE_SLIDER");
     },
   },
   modules: {},
