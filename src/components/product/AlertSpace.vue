@@ -17,20 +17,20 @@
       variant="danger"
       @dismiss-count-down="quantityExceededStockDismissCountDownChanged"
     >
-      {{ stockLeft }}개 이상 추가할 수 없습니다.
+      {{ stockLeft }}개 이상 추가할 수 없습니다.<br />최대
+      {{ addableQuantity }}개 더 추가할 수 있습니다.
     </b-alert>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {};
   },
   computed: {
-    stockLeft() {
-      return this.$store.state.stockLeft;
-    },
+    ...mapState(["stockLeft", "addableQuantity"]),
     cartAddSuccessDismissCountDown: {
       get() {
         return this.$store.state.cartAddSuccessDismissCountDown;

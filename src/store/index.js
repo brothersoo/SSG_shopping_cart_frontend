@@ -8,6 +8,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    productGroups: [
+      { id: 1, name: "쓱배송" },
+      { id: 2, name: "새벽배송" },
+      { id: 3, name: "택배" },
+    ],
     products: {
       content: [],
       currentPage: 1,
@@ -34,6 +39,7 @@ export default new Vuex.Store({
     cartAddSuccessDismissCountDown: 0,
     quantityExceededStockDismissCountDown: 0,
     stockLeft: 0,
+    addableQuantity: 0,
 
     productFilter: {
       priceSlider: {
@@ -160,7 +166,13 @@ export default new Vuex.Store({
       };
     },
     SET_CART_PRODUCTS(state, payload) {
-      state.cartProducts = payload;
+      for (let productGroup of state.productGroups) {
+        if (productGroup.name in payload) {
+          state.cartProducts[productGroup.name] = payload[productGroup.name];
+        } else {
+          state.cartProducts[productGroup.name] = [];
+        }
+      }
     },
     SET_CHECKING_PRODUCT(state, payload) {
       state.checkingProduct = payload;
@@ -187,6 +199,9 @@ export default new Vuex.Store({
     },
     SET_STOCK_LEFT(state, stock) {
       state.stockLeft = stock;
+    },
+    SET_ADDABLE_QUANTITY(state, quantity) {
+      state.addableQuantity = quantity;
     },
 
     SET_PRODUCT_GROUP_SELECTION(state, productGroupSelection) {

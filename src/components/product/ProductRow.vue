@@ -53,7 +53,7 @@ export default {
   methods: {
     ...mapActions(["setCheckingProduct", "addToCart"]),
     getSameProductInCart() {
-      let group = this.product.productGroupName;
+      let group = this.product.productGroup.name;
       if (group in this.cartProducts) {
         for (let cartProduct of this.cartProducts[group]) {
           if (cartProduct.product.id === this.product.id) {
@@ -76,8 +76,12 @@ export default {
       let sameProductInCart = this.getSameProductInCart();
       if (sameProductInCart) {
         if (this.isTotalQuantityOverStock(sameProductInCart)) {
-          this.$store.commit("SHOW_QUANTITY_EXCEEDED_ALERT", 3);
           this.$store.commit("SET_STOCK_LEFT", this.product.stock);
+          this.$store.commit(
+            "SET_ADDABLE_QUANTITY",
+            this.product.stock - sameProductInCart.quantity
+          );
+          this.$store.commit("SHOW_QUANTITY_EXCEEDED_ALERT", 3);
         } else {
           this.$bvModal.show("existing-product-alert-modal");
         }
