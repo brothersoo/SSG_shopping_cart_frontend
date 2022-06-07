@@ -45,3 +45,18 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  background: #ffc107;
+  border-color: #ffc107;
+}
+.page-link {
+  color: #ffc107;
+}
+</style>
