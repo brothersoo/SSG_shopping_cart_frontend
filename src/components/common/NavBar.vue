@@ -14,15 +14,8 @@
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-          <b-nav-item-dropdown right>
-            <!-- Using 'button-content' slot -->
-            <template #button-content>
-              <em>User</em>
-            </template>
-            <b-dropdown-item href="#">Profile</b-dropdown-item>
-            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-          </b-nav-item-dropdown>
+        <b-navbar-nav id="navbar-right" class="ml-auto">
+          <drop-down-sign-in></drop-down-sign-in>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -30,5 +23,17 @@
 </template>
 
 <script>
-export default {};
+import DropDownSignIn from "@/components/common/DropDownSignIn.vue";
+
+export default {
+  components: {
+    DropDownSignIn,
+  },
+};
 </script>
+
+<style>
+#navbar-right {
+  padding-right: 20rem;
+}
+</style>
