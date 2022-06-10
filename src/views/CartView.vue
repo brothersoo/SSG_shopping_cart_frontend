@@ -23,7 +23,7 @@
 
       <br />
 
-      <b-button size="lg" variant="warning">구매하기</b-button>
+      <b-button size="lg" variant="warning" @click="order">구매하기</b-button>
     </template>
     <h2 v-else>장바구니가 비어있습니다</h2>
   </div>
@@ -35,6 +35,8 @@ import { createNamespacedHelpers } from "vuex";
 
 const cartHelper = createNamespacedHelpers("cart");
 const productGroupHelper = createNamespacedHelpers("productGroup");
+
+import * as orderAPI from "@/api/order";
 
 export default {
   components: {
@@ -54,6 +56,20 @@ export default {
   },
   methods: {
     ...cartHelper.mapActions(["getCartProducts"]),
+    order() {
+      orderAPI
+        .order(
+          this.checkedCartProductIds.length !== 0
+            ? this.checkedCartProductIds
+            : this.everyCartProductIds
+        )
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
   },
   created() {
     this.getCartProducts();
