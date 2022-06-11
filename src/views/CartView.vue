@@ -65,9 +65,11 @@ export default {
         )
         .then((response) => {
           console.log(response);
+          this.$router.push("order");
         })
         .catch((err) => {
           console.error(err);
+          this.$bvModal.show("order-fail-modal");
         });
     },
   },
