@@ -7,6 +7,7 @@ import filterModule from "@/store/modules/FilterModule";
 import productGroupModule from "@/store/modules/ProductGroupModule";
 import productModule from "@/store/modules/ProductModule";
 import userModule from "@/store/modules/UserModule";
+import OrderModule from "./modules/OrderModule";
 
 Vue.use(Vuex);
 
@@ -18,5 +19,6 @@ export default new Vuex.Store({
     filter: filterModule,
     alert: alertModule,
     user: userModule,
+    order: OrderModule,
   },
 });

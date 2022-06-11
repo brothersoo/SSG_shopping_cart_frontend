@@ -22,6 +22,12 @@ const routes = [
     meta: { authRequired: true },
     component: () => import("@/views/CartView.vue"),
   },
+  {
+    path: "/order",
+    name: "order",
+    meta: { authRequired: true },
+    component: () => import("@/views/OrderView.vue"),
+  },
 ];
 
 const router = new VueRouter({
