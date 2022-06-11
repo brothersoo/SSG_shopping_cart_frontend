@@ -10,19 +10,21 @@
       <b-dropdown-item
         ><router-link to="/order">주문 내역</router-link></b-dropdown-item
       >
-      <b-dropdown-item @click="logout">로그아웃</b-dropdown-item>
+      <b-dropdown-item @click="logoutProcess">로그아웃</b-dropdown-item>
     </b-dropdown>
   </div>
 </template>
 
 <script>
-import VueCookies from "vue-cookies";
+import { createNamespacedHelpers } from "vuex";
+
+const userHelper = createNamespacedHelpers("user");
 
 export default {
   methods: {
-    logout() {
-      VueCookies.remove("access_token");
-      VueCookies.remove("refresh_token");
+    ...userHelper.mapActions(["logout"]),
+    logoutProcess() {
+      this.logout();
       if (this.$route.path !== "/product") {
         this.$router.push("product");
       } else {
