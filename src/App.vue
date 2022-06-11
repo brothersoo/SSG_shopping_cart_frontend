@@ -7,6 +7,7 @@
     <b-modal id="login-require-modal" ok-only>
       로그인이 필요한 기능입니다.
     </b-modal>
+    <b-modal id="refund-fail-modal" ok-only> 환불에 실패했습니다.</b-modal>
     <b-modal id="order-fail-modal" ok-only> 주문에 실패했습니다. </b-modal>
   </div>
 </template>

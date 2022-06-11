@@ -39,5 +39,10 @@ export default {
       console.log(res);
       return res;
     },
+    logout({ commit }) {
+      VueCookies.remove("access_token");
+      VueCookies.remove("refresh_token");
+      commit("SET_ACCESS_TOKEN", null);
+    },
   },
 };
