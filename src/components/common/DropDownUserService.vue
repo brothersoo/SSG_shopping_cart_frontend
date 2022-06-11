@@ -23,7 +23,11 @@ export default {
     logout() {
       VueCookies.remove("access_token");
       VueCookies.remove("refresh_token");
-      this.$router.push("product");
+      if (this.$route.path !== "/product") {
+        this.$router.push("product");
+      } else {
+        this.$router.go();
+      }
     },
   },
 };

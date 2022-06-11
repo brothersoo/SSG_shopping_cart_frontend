@@ -28,6 +28,16 @@ const routes = [
     meta: { authRequired: true },
     component: () => import("@/views/OrderView.vue"),
   },
+  {
+    path: "/register",
+    name: "register",
+    component: () => import("@/views/RegisterView.vue"),
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("@/views/LoginView.vue"),
+  },
 ];
 
 const router = new VueRouter({
@@ -53,7 +63,7 @@ router.beforeEach(async (to, from, next) => {
 
     // token이 존재하지 않는 경우
     alert("로그이 필요한 서비스입니다");
-    return next("/product");
+    return next("/login");
   } else {
     return next();
   }

@@ -17,8 +17,8 @@ export default {
     },
   },
   actions: {
-    login({ commit }, credentials) {
-      userAPI
+    async login({ commit }, credentials) {
+      let res = await userAPI
         .login(credentials)
         .then((response) => {
           console.log(response.data);
@@ -30,10 +30,14 @@ export default {
             "20d"
           );
           commit("SET_ACCESS_TOKEN", tokens.accessToken);
+          return true;
         })
         .catch((err) => {
           console.error(err);
+          return false;
         });
+      console.log(res);
+      return res;
     },
   },
 };
