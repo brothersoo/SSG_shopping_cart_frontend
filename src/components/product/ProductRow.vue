@@ -18,7 +18,7 @@
         icon="cart4"
         scale="2"
         variant="warning"
-        @click="checkIfIsAlreadyInCart"
+        @click="addToCartProcess"
       ></b-icon>
       <b-icon v-else icon="cart-x" scale="2" variant="secondary"></b-icon>
     </td>
@@ -31,6 +31,7 @@ import { createNamespacedHelpers } from "vuex";
 const productHelper = createNamespacedHelpers("product");
 const cartHelper = createNamespacedHelpers("cart");
 const alertHelper = createNamespacedHelpers("alert");
+const userHelper = createNamespacedHelpers("user");
 
 export default {
   created() {
@@ -49,6 +50,7 @@ export default {
     ...cartHelper.mapState({
       cartProducts: (state) => state.cartProducts,
     }),
+    ...userHelper.mapGetters(["isAuthenticated"]),
     minQuantityToCart() {
       return this.product.stock !== 0 ? 1 : 0;
     },
@@ -98,6 +100,13 @@ export default {
         }
       } else {
         this.addToCart();
+      }
+    },
+    addToCartProcess() {
+      if (!this.isAuthenticated) {
+        this.$bvModal.show("login-require-modal");
+      } else {
+        this.checkIfIsAlreadyInCart();
       }
     },
   },

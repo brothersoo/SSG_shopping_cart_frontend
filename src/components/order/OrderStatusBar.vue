@@ -36,7 +36,7 @@ export default {
       }
     },
     isRefundable() {
-      return this.order.status === "배송 완료";
+      return this.order.status === "COMPLETED";
     },
   },
   filters: {

@@ -7,7 +7,7 @@
         :order="order"
       ></order-info>
     </div>
-    <h2>주문 내역이 없습니다</h2>
+    <h2 v-else>주문 내역이 없습니다</h2>
   </div>
 </template>
 

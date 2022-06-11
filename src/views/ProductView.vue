@@ -30,6 +30,7 @@ import * as productAPI from "@/api/product";
 const productHelper = createNamespacedHelpers("product");
 const cartHelper = createNamespacedHelpers("cart");
 const filterHelper = createNamespacedHelpers("filter");
+const userHelper = createNamespacedHelpers("user");
 
 export default {
   components: { ProductTable, PaginationBar, FilterBar },
@@ -39,6 +40,9 @@ export default {
       checkingProduct: (state) => state.checkingProduct,
     }),
     ...filterHelper.mapGetters(["filterParam"]),
+    ...userHelper.mapState({
+      access_token: (state) => state.access_token,
+    }),
   },
   methods: {
     ...productHelper.mapActions(["getProducts", "setCheckingProduct"]),
@@ -68,7 +72,9 @@ export default {
         });
       });
     this.getProducts();
-    this.getCartProducts();
+    if (this.access_token) {
+      this.getCartProducts();
+    }
   },
 };
 </script>

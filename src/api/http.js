@@ -31,13 +31,20 @@ instance.interceptors.response.use(
   async (error) => {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    console.log("에러일 경우", error.config);
     const errorAPI = error.config;
-    if (error.response.data.status === 401 && errorAPI.retry === undefined) {
+    if (
+      error.response.status === 401 &&
+      errorAPI.retry === undefined &&
+      VueCookies.get("refresh_token")
+    ) {
       errorAPI.retry = true;
-      console.log("토큰이 이상한 오류일 경우");
+      console.log("토큰 에러");
       await userAPI.refreshToken();
       return await axios(errorAPI);
+    }
+
+    if (error.response.status === 403) {
+      alert("로그인이 필요한 서비스입니다");
     }
     return Promise.reject(error);
   }
