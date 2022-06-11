@@ -7,15 +7,13 @@ export default {
     accessToken: null,
   },
   getters: {
-    userEmail(state) {
-      return state.email;
+    isAuthenticated(state) {
+      return state.accessToken !== null && state.accessToken !== undefined;
     },
   },
   mutations: {
-    SET_TOKEN_COOKIES(state, tokens) {
-      VueCookies.set("access_token", `Bearer ${tokens.accessToken}`, "20m");
-      VueCookies.set("refresh_token", `Bearer ${tokens.refreshToken}`, "20d");
-      state.accessToken = tokens.accessToken;
+    SET_ACCESS_TOKEN(state, accessToken) {
+      state.accessToken = accessToken;
     },
   },
   actions: {
@@ -24,7 +22,14 @@ export default {
         .login(credentials)
         .then((response) => {
           console.log(response.data);
-          commit("SET_TOKEN_COOKIES", response.data);
+          let tokens = response.data;
+          VueCookies.set("access_token", `Bearer ${tokens.accessToken}`, "20m");
+          VueCookies.set(
+            "refresh_token",
+            `Bearer ${tokens.refreshToken}`,
+            "20d"
+          );
+          commit("SET_ACCESS_TOKEN", tokens.accessToken);
         })
         .catch((err) => {
           console.error(err);

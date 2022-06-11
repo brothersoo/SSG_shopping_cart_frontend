@@ -38,6 +38,7 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some((record) => record.meta.authRequired)) {
+    // access_token이 없는데 refresh_token은 있는 경우 refresh_token을 사용하여 access_token 갱신
     if (
       VueCookies.get("access_token") === null &&
       VueCookies.get("refresh_token") !== null
@@ -45,13 +46,12 @@ router.beforeEach(async (to, from, next) => {
       await userAPI.refreshToken();
     }
 
-    if (
-      to.matched.some((record) => record.meta.authRequired) ||
-      VueCookies.get("token")
-    ) {
+    // access_token이 존재하는 경우 진행
+    if (VueCookies.get("access_token")) {
       return next();
     }
 
+    // token이 존재하지 않는 경우
     alert("로그이 필요한 서비스입니다");
     return next("/product");
   } else {
