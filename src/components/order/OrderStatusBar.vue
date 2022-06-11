@@ -3,11 +3,15 @@
     <div>주문일: {{ order.createdAt | detailedDate }}</div>
     <div>총 주문 금액: {{ totalPrice | moneyFormat }}</div>
     <div>상태: {{ status }}</div>
-    <b-button v-if="isRefundable" variant="warning">환불하기</b-button>
+    <b-button v-if="isRefundable" variant="warning" @click="refund"
+      >환불하기</b-button
+    >
   </h5>
 </template>
 
 <script>
+import * as orderAPI from "@/api/order";
+
 export default {
   props: {
     order: Object,
@@ -37,6 +41,20 @@ export default {
     },
     isRefundable() {
       return this.order.status === "COMPLETED";
+    },
+  },
+  methods: {
+    refund() {
+      orderAPI
+        .refund(this.order.id)
+        .then((response) => {
+          console.log(response);
+          this.$router.go();
+        })
+        .catch((err) => {
+          console.error(err);
+          this.$bvModal.show("refund-fail-modal");
+        });
     },
   },
   filters: {
