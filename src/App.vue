@@ -4,11 +4,7 @@
     <alert-space></alert-space>
     <router-view />
 
-    <b-modal id="login-require-modal" ok-only>
-      로그인이 필요한 기능입니다.
-    </b-modal>
-    <b-modal id="refund-fail-modal" ok-only> 환불에 실패했습니다.</b-modal>
-    <b-modal id="order-fail-modal" ok-only> 주문에 실패했습니다. </b-modal>
+    <modal-space></modal-space>
   </div>
 </template>
 
@@ -17,6 +13,7 @@ import VueCookies from "vue-cookies";
 import { createNamespacedHelpers } from "vuex";
 import NavBar from "@/components/common/NavBar.vue";
 import AlertSpace from "./components/common/AlertSpace.vue";
+import ModalSpace from "./components/common/ModalSpace.vue";
 
 const userHelper = createNamespacedHelpers("user");
 
@@ -24,6 +21,7 @@ export default {
   components: {
     NavBar,
     AlertSpace,
+    ModalSpace,
   },
   methods: {
     ...userHelper.mapMutations(["SET_ACCESS_TOKEN"]),

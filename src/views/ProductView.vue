@@ -1,13 +1,5 @@
 <template>
   <div class="product">
-    <b-modal
-      id="existing-product-alert-modal"
-      @ok="addConfirmed"
-      @hidden="removeCheckingProduct"
-      >이미 장바구니에 포함되어있는 상품입니다.<br />선택한 수량만큼
-      추가하시겠습니까?</b-modal
-    >
-
     <filter-bar :onFilterChange="onFilterChange"></filter-bar>
 
     <product-table :products="products.content"></product-table>
@@ -45,15 +37,9 @@ export default {
     }),
   },
   methods: {
-    ...productHelper.mapActions(["getProducts", "setCheckingProduct"]),
-    ...cartHelper.mapActions(["getCartProducts", "addToCart"]),
+    ...productHelper.mapActions(["getProducts"]),
+    ...cartHelper.mapActions(["getCartProducts"]),
     ...filterHelper.mapActions(["setPriceRangeFilter"]),
-    addConfirmed() {
-      this.addToCart();
-    },
-    removeCheckingProduct() {
-      this.setCheckingProduct({ id: null, quantity: null });
-    },
     onFilterChange() {
       this.getProducts();
     },

@@ -21,7 +21,6 @@ export default {
       let res = await userAPI
         .login(credentials)
         .then((response) => {
-          console.log(response.data);
           let tokens = response.data;
           VueCookies.set("access_token", `Bearer ${tokens.accessToken}`, "20m");
           VueCookies.set(
