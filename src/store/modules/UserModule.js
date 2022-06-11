@@ -3,16 +3,19 @@ import VueCookies from "vue-cookies";
 
 export default {
   namespaced: true,
-  state: {},
+  state: {
+    accessToken: null,
+  },
   getters: {
     userEmail(state) {
       return state.email;
     },
   },
   mutations: {
-    SET_TOKEN_COOKIES(state, cookies) {
-      VueCookies.set("access_token", `Bearer ${cookies.accessToken}`, "20m");
-      VueCookies.set("refresh_token", `Bearer ${cookies.refreshToken}`, "20d");
+    SET_TOKEN_COOKIES(state, tokens) {
+      VueCookies.set("access_token", `Bearer ${tokens.accessToken}`, "20m");
+      VueCookies.set("refresh_token", `Bearer ${tokens.refreshToken}`, "20d");
+      state.accessToken = tokens.accessToken;
     },
   },
   actions: {

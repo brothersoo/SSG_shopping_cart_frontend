@@ -15,7 +15,8 @@
 
         <!-- Right aligned nav items -->
         <b-navbar-nav id="navbar-right" class="ml-auto">
-          <drop-down-sign-in></drop-down-sign-in>
+          <drop-down-user-service v-if="accessToken"></drop-down-user-service>
+          <drop-down-sign-in v-else></drop-down-sign-in>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -23,11 +24,22 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from "vuex";
+
 import DropDownSignIn from "@/components/common/DropDownSignIn.vue";
+import DropDownUserService from "@/components/common/DropDownUserService.vue";
+
+const userHelper = createNamespacedHelpers("user");
 
 export default {
   components: {
     DropDownSignIn,
+    DropDownUserService,
+  },
+  computed: {
+    ...userHelper.mapState({
+      accessToken: (state) => state.accessToken,
+    }),
   },
 };
 </script>
