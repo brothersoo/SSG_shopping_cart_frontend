@@ -65,6 +65,7 @@ export default {
         )
         .then((response) => {
           console.log(response);
+          this.$bvModal.show("order-success-modal");
           this.$router.push("order");
         })
         .catch((err) => {

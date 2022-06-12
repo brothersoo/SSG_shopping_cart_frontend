@@ -13,6 +13,7 @@ export default {
       새벽배송: [],
       택배: [],
     },
+    cartProductRequiresQuantityUpdateModal: false,
   },
   getters: {
     checkedCartProductsPrice(state, getters, rootState, rootGetters) {
@@ -78,6 +79,34 @@ export default {
       }
       state.cartProducts[group].push(addedCartProduct);
     },
+    REMOVE_CART_PRODUCT(state, { removedCartProductId, productGroupName }) {
+      for (let i = 0; i < state.cartProducts[productGroupName].length; i++) {
+        let cartProduct = state.cartProducts[productGroupName][i];
+        if (cartProduct.id === removedCartProductId) {
+          state.cartProducts[productGroupName].splice(i, 1);
+          return;
+        }
+      }
+    },
+    REMOVE_CHECKED_CART_PRODUCT(
+      state,
+      { removedCartProductId, productGroupName }
+    ) {
+      for (
+        let i = 0;
+        i < state.checkedCartProducts[productGroupName].length;
+        i++
+      ) {
+        let cartProduct = state.checkedCartProducts[productGroupName][i];
+        if (cartProduct.id === removedCartProductId) {
+          state.checkedCartProducts[productGroupName].splice(i, 1);
+          return;
+        }
+      }
+    },
+    SET_CART_PRODUCT_REQUIRES_QUANTITY_UPDATE_MODAL(state, value) {
+      state.cartProductRequiresQuantityUpdateModal = value;
+    },
   },
   actions: {
     getCartProducts({ commit, rootGetters }) {
@@ -90,16 +119,15 @@ export default {
           });
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response.status === 409) {
+            commit("SET_CART_PRODUCT_REQUIRES_QUANTITY_UPDATE_MODAL", true);
+          }
         });
     },
-    addToCart({ commit, rootState, rootGetters }) {
-      // TODO: change to JWT
-      let userEmail = rootGetters["user/userEmail"];
+    addToCart({ commit, rootState }) {
       cartAPI
         .addToCart(
           rootState.product.checkingProduct.id,
-          userEmail,
           rootState.product.checkingProduct.quantity
         )
         .then((response) => {
@@ -127,6 +155,24 @@ export default {
         })
         .catch((err) => {
           console.error(err);
+        });
+    },
+    removeCartProduct({ commit }, cartProduct) {
+      cartAPI
+        .deleteCartProduct(cartProduct.id)
+        .then((response) => {
+          let productGroupName = cartProduct.product.productGroup.name;
+          commit("REMOVE_CART_PRODUCT", {
+            removedCartProductId: response.data,
+            productGroupName,
+          });
+          commit("REMOVE_CHECKED_CART_PRODUCT", {
+            removedCartProductId: response.data,
+            productGroupName,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
   },
