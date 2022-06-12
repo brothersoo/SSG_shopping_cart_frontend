@@ -1,6 +1,9 @@
 <template>
   <div>
     <form id="register-form">
+      <div v-if="registerFailed" id="registerFailMessage">
+        아이디와 비밀번호를 확인해주세요
+      </div>
       <!-- Email input -->
       <div class="form-outline mb-4">
         <label class="form-label" for="register-form-email">이메일</label>
@@ -8,7 +11,7 @@
           v-model="email"
           type="email"
           id="register-form-email"
-          class="form-control"
+          :class="registerFailed ? 'form-control is-invalid' : 'form-control'"
         />
       </div>
 
@@ -19,36 +22,53 @@
           v-model="password"
           type="password"
           id="register-form-password"
-          class="form-control"
+          :class="
+            passwordConfirmed ? 'form-control' : 'form-control is-invalid'
+          "
         />
       </div>
 
-      <!-- 2 column grid layout for inline styling -->
-      <div class="row mb-4">
-        <div class="col">
-          <!-- Simple link -->
-          <a href="#!">비밀번호 찾기</a>
-        </div>
+      <!-- Password confirm input -->
+      <div class="form-outline mb-4">
+        <label class="form-label" for="register-form-password-confirm">
+          비밀번호 확인
+        </label>
+        <input
+          v-model="passwordConfirm"
+          type="password"
+          id="register-form-password-confirm"
+          :class="
+            passwordConfirmed ? 'form-control' : 'form-control is-invalid'
+          "
+        />
+      </div>
+
+      <!-- Username input -->
+      <div class="form-outline mb-4">
+        <label class="form-label" for="register-form-username">유저명</label>
+        <input
+          v-model="username"
+          type="email"
+          id="register-form-username"
+          :class="registerFailed ? 'form-control is-invalid' : 'form-control'"
+        />
       </div>
 
       <!-- Submit button -->
-      <button
-        type="button"
-        class="btn btn-warning btn-block mb-4"
-        @click="loginButtonClick"
+      <b-button
+        variant="warning"
+        v-if="registerAvailable"
+        @click="registerButtonClick"
       >
-        로그인
-      </button>
-
-      <!-- Register buttons -->
-      <div class="text-center">
-        <p>아직 회원이 아니신가요? <a href="#!">회원가입</a></p>
-      </div>
+        회원가입
+      </b-button>
+      <b-button variant="warning" v-else disabled> 회원가입 </b-button>
     </form>
   </div>
 </template>
 
 <script>
+import * as userAPI from "@/api/user";
 import { createNamespacedHelpers } from "vuex";
 
 const userHelper = createNamespacedHelpers("user");
@@ -58,15 +78,56 @@ export default {
     return {
       email: null,
       password: null,
+      passwordConfirm: null,
+      username: null,
+      registerFailed: false,
     };
   },
+  computed: {
+    registerData() {
+      return {
+        email: this.email,
+        password: this.password,
+        passwordConfirm: this.passwordConfirm,
+        username: this.username,
+      };
+    },
+    allFieldFilled() {
+      return (
+        this.isFilled(this.email) &&
+        this.isFilled(this.password) &&
+        this.isFilled(this.passwordConfirm) &&
+        this.isFilled(this.username)
+      );
+    },
+    passwordConfirmed() {
+      return (
+        this.isFilled(this.password) && this.password === this.passwordConfirm
+      );
+    },
+    registerAvailable() {
+      return this.allFieldFilled && this.passwordConfirmed;
+    },
+  },
   methods: {
-    ...userHelper.mapActions(["login"]),
-    loginButtonClick() {
-      if (this.login({ email: this.email, password: this.password })) {
-        this.$router.push("product");
+    ...userHelper.mapActions(["register"]),
+    registerButtonClick() {
+      userAPI
+        .register(this.registerData)
+        .then((response) => {
+          console.log(response);
+          this.$router.push("login");
+        })
+        .catch((err) => {
+          console.error(err);
+          this.registerFailed = true;
+        });
+    },
+    isFilled(value) {
+      if (value !== null && value !== undefined) {
+        return true;
       } else {
-        this.$router.push("product");
+        return false;
       }
     },
   },
@@ -81,5 +142,9 @@ export default {
   transform: translate(-50%, -50%);
   width: 400px;
   height: 600px;
+}
+#registerFailMessage {
+  color: firebrick;
+  font-size: 90%;
 }
 </style>

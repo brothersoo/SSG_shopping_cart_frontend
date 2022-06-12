@@ -16,9 +16,15 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav id="navbar-right" class="ml-auto">
           <drop-down-user-service v-if="accessToken"></drop-down-user-service>
-          <b-button v-else variant="warning">
-            <router-link to="/login">로그인</router-link>
-          </b-button>
+          <template v-else>
+            <b-button variant="warning">
+              <router-link to="/login">로그인</router-link>
+            </b-button>
+            &nbsp;
+            <b-button variant="warning">
+              <router-link to="/register">회원가입</router-link>
+            </b-button>
+          </template>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
