@@ -4,12 +4,12 @@ export default {
   namespaced: true,
   state: {
     cartProducts: {
-      쓱배송: [],
+      특별배송: [],
       새벽배송: [],
       택배: [],
     },
     checkedCartProducts: {
-      쓱배송: [],
+      특별배송: [],
       새벽배송: [],
       택배: [],
     },

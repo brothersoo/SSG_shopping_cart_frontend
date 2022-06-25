@@ -2,7 +2,7 @@ export default {
   namespaced: true,
   state: {
     productGroups: [
-      { id: 1, name: "쓱배송" },
+      { id: 1, name: "특별배송" },
       { id: 2, name: "새벽배송" },
       { id: 3, name: "택배" },
     ],
